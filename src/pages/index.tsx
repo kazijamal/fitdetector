@@ -1,15 +1,12 @@
 import type { NextPage } from 'next';
+import Link from 'next/link';
 import Head from 'next/head';
 import { trpc } from '../utils/trpc';
-
-type TechnologyCardProps = {
-  name: string;
-  description: string;
-  documentation: string;
-};
+import { useSession } from 'next-auth/react';
 
 const Home: NextPage = () => {
   const hello = trpc.useQuery(['example.hello', { text: 'from tRPC' }]);
+  const { data: session, status } = useSession();
 
   return (
     <>
@@ -23,55 +20,28 @@ const Home: NextPage = () => {
         <h1 className='text-5xl md:text-[5rem] leading-normal font-extrabold text-gray-700'>
           <span className='text-purple-300'>Fit</span>Detector
         </h1>
-        <p className='text-2xl text-gray-700'>This stack uses:</p>
-        <div className='grid gap-3 pt-3 mt-3 text-center md:grid-cols-2 lg:w-2/3'>
-          <TechnologyCard
-            name='NextJS'
-            description='The React framework for production'
-            documentation='https://nextjs.org/'
-          />
-          <TechnologyCard
-            name='TypeScript'
-            description='Strongly typed programming language that builds on JavaScript, giving you better tooling at any scale'
-            documentation='https://www.typescriptlang.org/'
-          />
-          <TechnologyCard
-            name='TailwindCSS'
-            description='Rapidly build modern websites without ever leaving your HTML'
-            documentation='https://tailwindcss.com/'
-          />
-          <TechnologyCard
-            name='tRPC'
-            description='End-to-end typesafe APIs made easy'
-            documentation='https://trpc.io/'
-          />
-        </div>
-        <div className='pt-6 text-2xl text-blue-500 flex justify-center items-center w-full'>
+        <div className='p-3 text-2xl text-blue-500 flex justify-center items-center w-full'>
           {hello.data ? <p>{hello.data.greeting}</p> : <p>Loading..</p>}
         </div>
+        <div className='p-3 text-2xl text-blue-500 flex justify-center items-center w-full'>
+          Your Authentication Status: {status}
+        </div>
+        {status === 'unauthenticated' && (
+          <Link href='/api/auth/signin'>
+            <a className='m-3 bg-transparent hover:bg-blue-500 text-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded'>
+              Sign In
+            </a>
+          </Link>
+        )}
+        {status === 'authenticated' && (
+          <Link href='/api/auth/signout'>
+            <a className='m-3 bg-transparent hover:bg-red-500 text-red-500 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded'>
+              Sign Out
+            </a>
+          </Link>
+        )}
       </main>
     </>
-  );
-};
-
-const TechnologyCard = ({
-  name,
-  description,
-  documentation,
-}: TechnologyCardProps) => {
-  return (
-    <section className='flex flex-col justify-center p-6 duration-500 border-2 border-gray-500 rounded shadow-xl motion-safe:hover:scale-105'>
-      <h2 className='text-lg text-gray-700'>{name}</h2>
-      <p className='text-sm text-gray-600'>{description}</p>
-      <a
-        className='mt-3 text-sm underline text-violet-500 decoration-dotted underline-offset-2'
-        href={documentation}
-        target='_blank'
-        rel='noreferrer'
-      >
-        Documentation
-      </a>
-    </section>
   );
 };
 
