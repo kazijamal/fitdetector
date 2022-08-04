@@ -39,9 +39,9 @@ const Home: NextPage = ({
         </p>
         {nextAuthSession ? (
           <div className='flex'>
-            <Link href='#'>
+            <Link href='/submit-outfit'>
               <a className='m-1 bg-purple-400 hover:bg-purple-600 text-white py-2 px-4 rounded'>
-                Submit a photo
+                Submit an outfit photo
               </a>
             </Link>
             <Link href='/api/auth/signout'>
