@@ -1,9 +1,10 @@
 import { createRouter } from './context';
-import { z } from 'zod';
 
-export const outfitRouter = createRouter().mutation('create', {
-  input: z.object({ name: z.string(), outfitPhoto: z.string() }),
-  resolve({ input }) {
-    return input;
+export const outfitRouter = createRouter().query('getRecent', {
+  async resolve({ ctx }) {
+    return await ctx.prisma.outfit.findMany({
+      include: { celebrity: true },
+      orderBy: [{ createdAt: 'desc' }],
+    });
   },
 });
