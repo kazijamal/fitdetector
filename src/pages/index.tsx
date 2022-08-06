@@ -1,19 +1,19 @@
 import type { NextPage } from 'next';
 import Link from 'next/link';
 import Head from 'next/head';
-import { authOptions as nextAuthOptions } from './api/auth/[...nextauth]';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { trpc } from '../utils/trpc';
 import MoonLoader from 'react-spinners/MoonLoader';
 
 type OutfitCardProps = {
+  id: string;
   image: string;
   celebrity: string;
   description: string | null;
 };
 
 const Home: NextPage = () => {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const {
     data: recentOutfits,
     isLoading,
@@ -102,23 +102,24 @@ const Home: NextPage = () => {
         </h2>
         <div className='m-2 flex gap-3 flex-col items-center'>
           {isLoading && <MoonLoader />}
+          {isError && <p>There was an error retrieving recent outfits</p>}
           {recentOutfits &&
             recentOutfits.map((outfit) => (
               <OutfitCard
+                id={outfit.id}
                 image={outfit.image}
                 celebrity={outfit.celebrity.name}
                 description={outfit.description}
                 key={outfit.id}
               />
             ))}
-          {isError && <p>There was an error retrieving data</p>}
         </div>
       </main>
     </>
   );
 };
 
-const OutfitCard = ({ image, celebrity, description }: OutfitCardProps) => {
+const OutfitCard = ({ id, image, celebrity, description }: OutfitCardProps) => {
   return (
     <div className='max-w-xs rounded overflow-hidden shadow-lg'>
       <img className='w-full' src={image} />
@@ -128,7 +129,7 @@ const OutfitCard = ({ image, celebrity, description }: OutfitCardProps) => {
           <p className='text-gray-700 text-base'>{description}</p>
         )}
         <div className='pt-4 pb-2'>
-          <Link href='#'>
+          <Link href={`/outfits/${id}`}>
             <a className='bg-purple-400 hover:bg-purple-600 text-white py-2 px-4 rounded'>
               View outfit info
             </a>

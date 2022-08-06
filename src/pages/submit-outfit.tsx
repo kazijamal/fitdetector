@@ -1,5 +1,4 @@
 import type { NextPage } from 'next';
-import Link from 'next/link';
 import Head from 'next/head';
 import { useState, useRef } from 'react';
 import { useSession } from 'next-auth/react';
@@ -12,9 +11,9 @@ const SubmitOutfit: NextPage = () => {
     required: true,
   });
 
-  const outfitMutation = trpc.useMutation(['protected-outfit.create'], {
+  const outfitMutation = trpc.useMutation(['outfit.create'], {
     onSuccess: (data) => {
-      router.push('/');
+      router.push(`/outfits/${data.id}`);
     },
   });
 
@@ -53,19 +52,10 @@ const SubmitOutfit: NextPage = () => {
     <>
       <Head>
         <title>FitDetector</title>
-        <link rel='icon' href='/favicon.ico' />
       </Head>
 
       <main className='container mx-auto flex flex-col items-center justify-center min-h-screen p-4'>
-        <Link href='/'>
-          <a>
-            <h1 className='text-6xl font-extrabold text-gray-700 m-5'>
-              <span className='text-purple-300'>Fit</span>Detector
-            </h1>
-          </a>
-        </Link>
-
-        <h2 className='text-2xl font-bold text-gray-700'>Submit Outfit</h2>
+        <h1 className='text-3xl font-bold text-gray-700'>Submit Outfit</h1>
 
         <form className='flex flex-col gap-5 m-5' onSubmit={handleSubmit}>
           <label>
