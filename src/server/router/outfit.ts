@@ -5,10 +5,12 @@ import { z } from 'zod';
 export const outfitRouter = createRouter()
   .query('getRecent', {
     async resolve({ ctx }) {
-      return await ctx.prisma.outfit.findMany({
+      const recentOutfits = await ctx.prisma.outfit.findMany({
         include: { celebrity: true },
         orderBy: [{ createdAt: 'desc' }],
       });
+
+      return recentOutfits;
     },
   })
   .mutation('create', {
@@ -153,5 +155,22 @@ export const outfitRouter = createRouter()
       }
 
       return rating;
+    },
+  })
+  .query('mySubmissions', {
+    async resolve({ ctx }) {
+      if (!ctx.session?.user?.id) {
+        throw new trpc.TRPCError({ code: 'UNAUTHORIZED' });
+      }
+
+      const userId = ctx.session.user.id;
+
+      const outfits = await ctx.prisma.outfit.findMany({
+        where: { userId },
+        include: { celebrity: true },
+        orderBy: [{ createdAt: 'desc' }],
+      });
+
+      return outfits;
     },
   });

@@ -50,6 +50,11 @@ const Home: NextPage = () => {
                 Following
               </a>
             </Link>
+            <Link href='/my-submissions'>
+              <a className='m-1 bg-purple-400 hover:bg-purple-600 text-white py-2 px-4 rounded'>
+                Your Submissions
+              </a>
+            </Link>
             <button
               className='m-1 bg-red-400 hover:bg-red-600 text-white py-2 px-4 rounded'
               onClick={() => signOut()}

@@ -14,7 +14,12 @@ export const celebrityRouter = createRouter()
 
         const celebrity = await ctx.prisma.celebrity.findUniqueOrThrow({
           where: { id },
-          include: { outfits: true, _count: { select: { followers: true } } },
+          include: {
+            outfits: {
+              orderBy: [{ createdAt: 'desc' }],
+            },
+            _count: { select: { followers: true } },
+          },
         });
 
         const following = await ctx.prisma.follow.findFirst({
