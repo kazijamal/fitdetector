@@ -24,9 +24,18 @@ const Celebrity: NextPage = () => {
       utils.invalidateQueries(['celebrity.getById']);
     },
   });
+  const unfollowMutation = trpc.useMutation(['celebrity.unfollow'], {
+    onSuccess: (data) => {
+      utils.invalidateQueries(['celebrity.getById']);
+    },
+  });
 
   const handleFollowClick = async () => {
     followMutation.mutate({ id });
+  };
+
+  const handleUnfollowClick = async () => {
+    unfollowMutation.mutate({ id });
   };
 
   if (status === 'authenticated' && celebrityData) {
@@ -43,7 +52,7 @@ const Celebrity: NextPage = () => {
 
           <h2>{celebrity._count.followers} followers</h2>
           {following ? (
-            <p>Following</p>
+            <button onClick={handleUnfollowClick}>Unfollow</button>
           ) : (
             <button onClick={handleFollowClick}>Follow</button>
           )}
@@ -52,6 +61,7 @@ const Celebrity: NextPage = () => {
             <h2>Average outfit rating: {celebrity.rating}</h2>
           )}
 
+          <h1>Outfits</h1>
           {celebrity.outfits.map((outfit) => (
             <OutfitCard
               id={outfit.id}
@@ -68,7 +78,33 @@ const Celebrity: NextPage = () => {
   if (status === 'unauthenticated' && celebrityData) {
     const { celebrity } = celebrityData;
 
-    return <></>;
+    return (
+      <>
+        <Head>
+          <title>FitDetector</title>
+        </Head>
+
+        <main>
+          <h1>{celebrity.name}</h1>
+
+          <h2>{celebrity._count.followers} followers</h2>
+
+          {celebrity.rating && (
+            <h2>Average outfit rating: {celebrity.rating}</h2>
+          )}
+
+          <h1>Outfits</h1>
+          {celebrity.outfits.map((outfit) => (
+            <OutfitCard
+              id={outfit.id}
+              image={outfit.image}
+              description={outfit.description}
+              key={outfit.id}
+            />
+          ))}
+        </main>
+      </>
+    );
   }
 
   return <MoonLoader />;

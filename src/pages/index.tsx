@@ -45,6 +45,11 @@ const Home: NextPage = () => {
                 Submit an outfit photo
               </a>
             </Link>
+            <Link href='/following'>
+              <a className='m-1 bg-purple-400 hover:bg-purple-600 text-white py-2 px-4 rounded'>
+                Following
+              </a>
+            </Link>
             <button
               className='m-1 bg-red-400 hover:bg-red-600 text-white py-2 px-4 rounded'
               onClick={() => signOut()}
