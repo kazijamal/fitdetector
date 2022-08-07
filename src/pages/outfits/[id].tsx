@@ -39,7 +39,7 @@ const Outfit: NextPage = () => {
   };
 
   if (status === 'authenticated' && outfitData) {
-    const { outfit, follows, rating } = outfitData;
+    const { outfit, following, rating } = outfitData;
 
     return (
       <>
@@ -51,8 +51,10 @@ const Outfit: NextPage = () => {
           <div>
             <h1>Outfit</h1>
 
-            <h2>{outfit.celebrity.name}</h2>
-            {follows && <p>Following</p>}
+            <Link href={`/celebrities/${outfit.celebrity.id}`}>
+              <a>{outfit.celebrity.name}</a>
+            </Link>
+            {following && <p>Following</p>}
 
             <img src={outfit.image} />
 
@@ -102,16 +104,18 @@ const Outfit: NextPage = () => {
           <div>
             <h2>Clothing</h2>
             {outfit.clothing.length ? (
-              outfit.clothing.map((clothing) => (
-                <div key={clothing.id}>
-                  <h3>{clothing.type}</h3>
-                  <p>Brand: {clothing.brand}</p>
-                  {clothing.price && <p>Price: ${clothing.price}</p>}
-                  <p>
-                    Link: <a href={clothing.link}>{clothing.link}</a>
-                  </p>
-                </div>
-              ))
+              <ul>
+                {outfit.clothing.map((clothing) => (
+                  <li key={clothing.id}>
+                    <h3>{clothing.type}</h3>
+                    <p>Brand: {clothing.brand}</p>
+                    {clothing.price && <p>Price: ${clothing.price}</p>}
+                    <p>
+                      Link: <a href={clothing.link}>{clothing.link}</a>
+                    </p>
+                  </li>
+                ))}
+              </ul>
             ) : (
               <p>No submitted clothing</p>
             )}
@@ -137,7 +141,9 @@ const Outfit: NextPage = () => {
           <div>
             <h1>Outfit</h1>
 
-            <h2>{outfit.celebrity.name}</h2>
+            <Link href={`/celebrities/${outfit.celebrity.id}`}>
+              <a>{outfit.celebrity.name}</a>
+            </Link>
 
             <img src={outfit.image} />
 
@@ -170,16 +176,18 @@ const Outfit: NextPage = () => {
           <div>
             <h2>Clothing</h2>
             {outfit.clothing.length ? (
-              outfit.clothing.map((clothing) => (
-                <div key={clothing.id}>
-                  <h3>{clothing.type}</h3>
-                  <p>Brand: {clothing.brand}</p>
-                  {clothing.price && <p>Price: ${clothing.price}</p>}
-                  <p>
-                    Link: <a href={clothing.link}>{clothing.link}</a>
-                  </p>
-                </div>
-              ))
+              <ul>
+                {outfit.clothing.map((clothing) => (
+                  <li key={clothing.id}>
+                    <h3>{clothing.type}</h3>
+                    <p>Brand: {clothing.brand}</p>
+                    {clothing.price && <p>Price: ${clothing.price}</p>}
+                    <p>
+                      Link: <a href={clothing.link}>{clothing.link}</a>
+                    </p>
+                  </li>
+                ))}
+              </ul>
             ) : (
               <p>No submitted clothing</p>
             )}

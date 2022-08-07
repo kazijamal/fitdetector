@@ -66,7 +66,7 @@ export const outfitRouter = createRouter()
           include: { celebrity: true, user: true, clothing: true },
         });
 
-        const follows = await ctx.prisma.follow.findFirst({
+        const following = await ctx.prisma.follow.findFirst({
           where: { userId, celebrityId: outfit.celebrity.id },
         });
 
@@ -76,7 +76,7 @@ export const outfitRouter = createRouter()
 
         return {
           outfit,
-          follows: Boolean(follows),
+          following: Boolean(following),
           rating: rating?.value,
         };
       } else {
@@ -110,7 +110,7 @@ export const outfitRouter = createRouter()
         },
       });
 
-      const averageRating = await ctx.prisma.outfitRating.aggregate({
+      const averageOutfitRating = await ctx.prisma.outfitRating.aggregate({
         _avg: {
           value: true,
         },
@@ -124,9 +124,33 @@ export const outfitRouter = createRouter()
           id: outfitId,
         },
         data: {
-          rating: averageRating._avg.value,
+          rating: averageOutfitRating._avg.value,
         },
       });
+
+      const outfit = await ctx.prisma.outfit.findUnique({
+        where: { id: outfitId },
+      });
+
+      if (outfit) {
+        const celebrityId = outfit.celebrityId;
+
+        const averageCelebrityRating = await ctx.prisma.outfit.aggregate({
+          _avg: {
+            rating: true,
+          },
+          where: {
+            celebrityId,
+          },
+        });
+
+        await ctx.prisma.celebrity.update({
+          where: { id: celebrityId },
+          data: {
+            rating: averageCelebrityRating._avg.rating,
+          },
+        });
+      }
 
       return rating;
     },

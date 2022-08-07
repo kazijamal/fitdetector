@@ -62,10 +62,11 @@ model ClothingVote {
 }
 
 model Celebrity {
-    id      String   @id @default(cuid())
-    name    String
-    outfits Outfit[]
-    Follow  Follow[]
+    id        String   @id @default(cuid())
+    name      String
+    rating    Float?
+    outfits   Outfit[]
+    followers Follow[]
 }
 
 model Follow {
