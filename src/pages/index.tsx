@@ -4,6 +4,8 @@ import Head from 'next/head';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { trpc } from '../utils/trpc';
 import MoonLoader from 'react-spinners/MoonLoader';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 type OutfitCardProps = {
   id: string;
@@ -13,12 +15,20 @@ type OutfitCardProps = {
 };
 
 const Home: NextPage = () => {
+  const router = useRouter();
   const { status } = useSession();
   const {
     data: recentOutfits,
     isLoading,
     isError,
   } = trpc.useQuery(['outfit.getRecent']);
+
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearchSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    router.push(`/celebrity-search?q=${searchQuery}`);
+  };
 
   return (
     <>
@@ -71,7 +81,7 @@ const Home: NextPage = () => {
             Sign in to submit an outfit photo
           </button>
         )}
-        <form className='w-full max-w-md m-3'>
+        <form className='w-full max-w-md m-3' onSubmit={handleSearchSubmit}>
           <label className='mb-2 text-sm font-medium text-gray-900 sr-only'>
             Search
           </label>
@@ -97,6 +107,8 @@ const Home: NextPage = () => {
               type='search'
               className='block p-4 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-purple-300 focus:border-purple-300'
               placeholder='Search Celebrities...'
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
             <button
               type='submit'

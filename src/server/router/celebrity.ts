@@ -91,7 +91,7 @@ export const celebrityRouter = createRouter()
     },
   })
   .query('following', {
-    async resolve({ input, ctx }) {
+    async resolve({ ctx }) {
       if (!ctx.session?.user?.id) {
         throw new trpc.TRPCError({ code: 'UNAUTHORIZED' });
       }
@@ -117,5 +117,19 @@ export const celebrityRouter = createRouter()
       });
 
       return { celebrities, recentOutfits };
+    },
+  })
+  .query('search', {
+    input: z.object({
+      query: z.string(),
+    }),
+    async resolve({ input, ctx }) {
+      const { query } = input;
+      const celebrities = await ctx.prisma.celebrity.findMany({
+        where: {
+          name: { contains: query },
+        },
+      });
+      return celebrities;
     },
   });
