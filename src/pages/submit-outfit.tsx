@@ -39,7 +39,7 @@ const SubmitOutfit: NextPage = () => {
   return (
     <>
       <Head>
-        <title>FitDetector</title>
+        <title>Submit Outfit - FitDetector</title>
       </Head>
 
       <main className='container mx-auto flex flex-col items-center justify-center min-h-screen p-4'>

@@ -32,19 +32,20 @@ const MySubmissions: NextPage = () => {
         <h1>Outfits you submitted</h1>
         {isLoading && <MoonLoader />}
         {error && <p>There was an error retrieving outfits you submitted</p>}
-        {outfits && outfits.length ? (
-          outfits.map((outfit) => (
-            <OutfitCard
-              id={outfit.id}
-              image={outfit.image}
-              celebrity={outfit.celebrity.name}
-              description={outfit.description}
-              key={outfit.id}
-            />
-          ))
-        ) : (
-          <p>No outfits you submitted</p>
-        )}
+        {outfits &&
+          (outfits.length ? (
+            outfits.map((outfit) => (
+              <OutfitCard
+                id={outfit.id}
+                image={outfit.image}
+                celebrity={outfit.celebrity.name}
+                description={outfit.description}
+                key={outfit.id}
+              />
+            ))
+          ) : (
+            <p>No outfits you submitted</p>
+          ))}
       </main>
     </>
   );

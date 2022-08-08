@@ -25,7 +25,6 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   theme: {
-    colorScheme: 'light', // "auto" | "dark" | "light"
     logo: '/logo.png', // Absolute URL to image
   },
 };

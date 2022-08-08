@@ -25,7 +25,7 @@ const Following: NextPage = () => {
   return (
     <>
       <Head>
-        <title>FitDetector</title>
+        <title>Following - FitDetector</title>
       </Head>
 
       <main>

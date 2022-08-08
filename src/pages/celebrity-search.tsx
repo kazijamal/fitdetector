@@ -77,19 +77,20 @@ const CelebritySearch: NextPage<
 
         {isLoading && <MoonLoader />}
         {error && <p>There was an error retrieving recent outfits</p>}
-        {celebrities && celebrities.length ? (
-          <ul>
-            {celebrities.map((celebrity) => (
-              <li key={celebrity.id}>
-                <Link href={`/celebrities/${celebrity.id}`}>
-                  <a>{celebrity.name}</a>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No celebrities found matching your search</p>
-        )}
+        {celebrities &&
+          (celebrities.length ? (
+            <ul>
+              {celebrities.map((celebrity) => (
+                <li key={celebrity.id}>
+                  <Link href={`/celebrities/${celebrity.id}`}>
+                    <a>{celebrity.name}</a>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No celebrities found matching your search</p>
+          ))}
       </main>
     </>
   );
