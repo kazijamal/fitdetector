@@ -1,35 +1,23 @@
-import type { NextPage } from 'next';
+import type { NextPage, GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
-import { useState, useRef } from 'react';
-import { useSession } from 'next-auth/react';
-import { trpc } from '../utils/trpc';
 import { useRouter } from 'next/router';
+import { useState, useRef } from 'react';
+import { trpc } from '../utils/trpc';
+import { getAuthSession } from '../server/common/get-server-session';
+import { fileToBase64 } from '../utils/utils';
 
 const SubmitOutfit: NextPage = () => {
   const router = useRouter();
-  const { status } = useSession({
-    required: true,
-  });
+  const [celebrityName, setCelebrityName] = useState('');
+  const [description, setDescription] = useState('');
+  const [source, setSource] = useState('');
+  const fileInput = useRef<HTMLInputElement>(null);
 
   const outfitMutation = trpc.useMutation(['outfit.create'], {
     onSuccess: (data) => {
       router.push(`/outfits/${data.id}`);
     },
   });
-
-  const [celebrityName, setCelebrityName] = useState('');
-  const [description, setDescription] = useState('');
-  const [source, setSource] = useState('');
-  const fileInput = useRef<HTMLInputElement>(null);
-
-  const fileToBase64 = (file: File): Promise<string> => {
-    return new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result?.toString() || '');
-      reader.onerror = (error) => reject(error);
-    });
-  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -121,6 +109,25 @@ const SubmitOutfit: NextPage = () => {
       </main>
     </>
   );
+};
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const authSession = await getAuthSession(ctx);
+
+  if (!authSession) {
+    return {
+      redirect: {
+        destination: `/api/auth/signin?callbackUrl=${ctx.resolvedUrl}`,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      authSession,
+    },
+  };
 };
 
 export default SubmitOutfit;

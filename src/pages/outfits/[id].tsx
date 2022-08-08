@@ -1,27 +1,36 @@
-import type { NextPage } from 'next';
+import type {
+  NextPage,
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
 import Head from 'next/head';
-import { trpc } from '../../utils/trpc';
-import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
-import MoonLoader from 'react-spinners/MoonLoader';
-import { isValidHttpUrl } from '../../utils/utils';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { trpc } from '../../utils/trpc';
+import { getAuthSession } from '../../server/common/get-server-session';
+import { isValidHttpUrl } from '../../utils/utils';
+import MoonLoader from 'react-spinners/MoonLoader';
 
-const Outfit: NextPage = () => {
+const Outfit: NextPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ authSession }) => {
   const router = useRouter();
-  const id = typeof router.query.id === 'string' ? router.query.id : '';
-  const { status } = useSession();
-
   const utils = trpc.useContext();
-  const { data: outfitData } = trpc.useQuery(['outfit.getById', { id }]);
+  const id = typeof router.query.id === 'string' ? router.query.id : '';
+  const [ratingInput, setRatingInput] = useState('');
+
+  const {
+    data: outfitData,
+    isLoading,
+    error,
+  } = trpc.useQuery(['outfit.getById', { id }]);
+
   const outfitRatingMutation = trpc.useMutation(['outfit.createRating'], {
     onSuccess: (data) => {
       utils.invalidateQueries(['outfit.getById']);
     },
   });
-
-  const [ratingInput, setRatingInput] = useState('');
 
   const handleRatingSubmit = async () => {
     if (
@@ -38,7 +47,21 @@ const Outfit: NextPage = () => {
     }
   };
 
-  if (status === 'authenticated' && outfitData) {
+  if (isLoading) {
+    return (
+      <>
+        <Head>
+          <title>FitDetector</title>
+        </Head>
+
+        <main>
+          <MoonLoader />
+        </main>
+      </>
+    );
+  }
+
+  if (authSession && outfitData) {
     const { outfit, following, rating } = outfitData;
 
     return (
@@ -128,7 +151,7 @@ const Outfit: NextPage = () => {
     );
   }
 
-  if (status === 'unauthenticated' && outfitData) {
+  if (!authSession && outfitData) {
     const { outfit } = outfitData;
 
     return (
@@ -197,7 +220,36 @@ const Outfit: NextPage = () => {
     );
   }
 
-  return <MoonLoader />;
+  return (
+    <>
+      <Head>
+        <title>FitDetector</title>
+      </Head>
+
+      <main>
+        <p>There was an error retrieving outfit information</p>
+      </main>
+    </>
+  );
+};
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const authSession = await getAuthSession(ctx);
+
+  if (!authSession) {
+    return {
+      redirect: {
+        destination: `/api/auth/signin?callbackUrl=${ctx.resolvedUrl}`,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      authSession,
+    },
+  };
 };
 
 export default Outfit;

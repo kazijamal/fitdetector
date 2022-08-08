@@ -1,28 +1,24 @@
-import type { NextPage } from 'next';
+import type { NextPage, GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
-import { useState, useRef } from 'react';
-import { useSession } from 'next-auth/react';
-import { trpc } from '../../utils/trpc';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { trpc } from '../../utils/trpc';
+import { getAuthSession } from '../../server/common/get-server-session';
 
 const SubmitClothing: NextPage = () => {
   const router = useRouter();
   const outfitId =
     typeof router.query.outfitId === 'string' ? router.query.outfitId : '';
-  const { status } = useSession({
-    required: true,
-  });
+  const [type, setType] = useState('');
+  const [brand, setBrand] = useState('');
+  const [price, setPrice] = useState('');
+  const [link, setLink] = useState('');
 
   const clothingMutation = trpc.useMutation(['clothing.create'], {
     onSuccess: (data) => {
       router.push(`/outfits/${data.outfitId}`);
     },
   });
-
-  const [type, setType] = useState('');
-  const [brand, setBrand] = useState('');
-  const [price, setPrice] = useState('');
-  const [link, setLink] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -107,6 +103,25 @@ const SubmitClothing: NextPage = () => {
       </main>
     </>
   );
+};
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const authSession = await getAuthSession(ctx);
+
+  if (!authSession) {
+    return {
+      redirect: {
+        destination: `/api/auth/signin?callbackUrl=${ctx.resolvedUrl}`,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      authSession,
+    },
+  };
 };
 
 export default SubmitClothing;

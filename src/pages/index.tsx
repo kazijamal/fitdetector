@@ -1,11 +1,16 @@
-import type { NextPage } from 'next';
-import Link from 'next/link';
+import type {
+  NextPage,
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
 import Head from 'next/head';
-import { useSession, signIn, signOut } from 'next-auth/react';
-import { trpc } from '../utils/trpc';
-import MoonLoader from 'react-spinners/MoonLoader';
-import { useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { signIn, signOut } from 'next-auth/react';
+import { trpc } from '../utils/trpc';
+import { getAuthSession } from '../server/common/get-server-session';
+import MoonLoader from 'react-spinners/MoonLoader';
 
 type OutfitCardProps = {
   id: string;
@@ -14,16 +19,17 @@ type OutfitCardProps = {
   description: string | null;
 };
 
-const Home: NextPage = () => {
+const Home: NextPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ authSession }) => {
   const router = useRouter();
-  const { status } = useSession();
+  const [searchQuery, setSearchQuery] = useState('');
+
   const {
     data: recentOutfits,
     isLoading,
-    isError,
+    error,
   } = trpc.useQuery(['outfit.getRecent']);
-
-  const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearchSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -48,7 +54,8 @@ const Home: NextPage = () => {
         <p className='text-lg text-gray-600 m-2 text-center'>
           Find out what clothes your favorite celebrities are wearing
         </p>
-        {status === 'authenticated' && (
+
+        {authSession ? (
           <div className='flex'>
             <Link href='/submit-outfit'>
               <a className='m-1 bg-purple-400 hover:bg-purple-600 text-white py-2 px-4 rounded'>
@@ -72,8 +79,7 @@ const Home: NextPage = () => {
               Sign out
             </button>
           </div>
-        )}
-        {status === 'unauthenticated' && (
+        ) : (
           <button
             className='m-1 bg-purple-400 hover:bg-purple-600 text-white py-2 px-4 rounded'
             onClick={() => signIn()}
@@ -81,6 +87,7 @@ const Home: NextPage = () => {
             Sign in to submit an outfit photo
           </button>
         )}
+
         <form className='w-full max-w-md m-3' onSubmit={handleSearchSubmit}>
           <label className='mb-2 text-sm font-medium text-gray-900 sr-only'>
             Search
@@ -109,6 +116,7 @@ const Home: NextPage = () => {
               placeholder='Search Celebrities...'
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              required
             />
             <button
               type='submit'
@@ -124,8 +132,8 @@ const Home: NextPage = () => {
         </h2>
         <div className='m-2 flex gap-3 flex-col items-center'>
           {isLoading && <MoonLoader />}
-          {isError && <p>There was an error retrieving recent outfits</p>}
-          {recentOutfits &&
+          {error && <p>There was an error retrieving recent outfits</p>}
+          {recentOutfits && recentOutfits.length ? (
             recentOutfits.map((outfit) => (
               <OutfitCard
                 id={outfit.id}
@@ -134,7 +142,10 @@ const Home: NextPage = () => {
                 description={outfit.description}
                 key={outfit.id}
               />
-            ))}
+            ))
+          ) : (
+            <p>No recent outfits</p>
+          )}
         </div>
       </main>
     </>
@@ -160,6 +171,16 @@ const OutfitCard = ({ id, image, celebrity, description }: OutfitCardProps) => {
       </div>
     </div>
   );
+};
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const authSession = await getAuthSession(ctx);
+
+  return {
+    props: {
+      authSession,
+    },
+  };
 };
 
 export default Home;

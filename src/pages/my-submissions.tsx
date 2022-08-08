@@ -1,10 +1,10 @@
-import type { NextPage } from 'next';
+import type { NextPage, GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
-import { useSession } from 'next-auth/react';
-import { trpc } from '../utils/trpc';
-import { useRouter } from 'next/router';
-import { MoonLoader } from 'react-spinners';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { trpc } from '../utils/trpc';
+import { getAuthSession } from '../server/common/get-server-session';
+import MoonLoader from 'react-spinners/MoonLoader';
 
 type OutfitCardProps = {
   id: string;
@@ -15,22 +15,25 @@ type OutfitCardProps = {
 
 const MySubmissions: NextPage = () => {
   const router = useRouter();
-  const { status } = useSession({
-    required: true,
-  });
 
-  const { data: outfits } = trpc.useQuery(['outfit.mySubmissions']);
+  const {
+    data: outfits,
+    isLoading,
+    error,
+  } = trpc.useQuery(['outfit.mySubmissions']);
 
-  if (outfits) {
-    return (
-      <>
-        <Head>
-          <title>FitDetector</title>
-        </Head>
+  return (
+    <>
+      <Head>
+        <title>My Submissions - FitDetector</title>
+      </Head>
 
-        <main>
-          <h1>Outfits you submitted</h1>
-          {outfits.map((outfit) => (
+      <main>
+        <h1>Outfits you submitted</h1>
+        {isLoading && <MoonLoader />}
+        {error && <p>There was an error retrieving outfits you submitted</p>}
+        {outfits && outfits.length ? (
+          outfits.map((outfit) => (
             <OutfitCard
               id={outfit.id}
               image={outfit.image}
@@ -38,13 +41,13 @@ const MySubmissions: NextPage = () => {
               description={outfit.description}
               key={outfit.id}
             />
-          ))}
-        </main>
-      </>
-    );
-  }
-
-  return <MoonLoader />;
+          ))
+        ) : (
+          <p>No outfits you submitted</p>
+        )}
+      </main>
+    </>
+  );
 };
 
 const OutfitCard = ({ id, image, celebrity, description }: OutfitCardProps) => {
@@ -66,6 +69,25 @@ const OutfitCard = ({ id, image, celebrity, description }: OutfitCardProps) => {
       </div>
     </div>
   );
+};
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const authSession = await getAuthSession(ctx);
+
+  if (!authSession) {
+    return {
+      redirect: {
+        destination: `/api/auth/signin?callbackUrl=${ctx.resolvedUrl}`,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      authSession,
+    },
+  };
 };
 
 export default MySubmissions;

@@ -1,10 +1,10 @@
-import type { NextPage } from 'next';
+import type { NextPage, GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
-import { useSession } from 'next-auth/react';
-import { trpc } from '../utils/trpc';
-import { useRouter } from 'next/router';
-import { MoonLoader } from 'react-spinners';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { trpc } from '../utils/trpc';
+import { getAuthSession } from '../server/common/get-server-session';
+import MoonLoader from 'react-spinners/MoonLoader';
 
 type OutfitCardProps = {
   id: string;
@@ -15,52 +15,58 @@ type OutfitCardProps = {
 
 const Following: NextPage = () => {
   const router = useRouter();
-  const { status } = useSession({
-    required: true,
-  });
 
-  const { data: followingData } = trpc.useQuery(['celebrity.following']);
+  const {
+    data: followingData,
+    isLoading,
+    error,
+  } = trpc.useQuery(['celebrity.following']);
 
-  if (followingData) {
-    const { celebrities, recentOutfits } = followingData;
-    return (
-      <>
-        <Head>
-          <title>FitDetector</title>
-        </Head>
+  return (
+    <>
+      <Head>
+        <title>FitDetector</title>
+      </Head>
 
-        <main>
-          <h1>Celebrities you follow</h1>
-          {celebrities.length ? (
-            <ul>
-              {celebrities.map((celebrity) => (
-                <li key={celebrity.id}>
-                  <Link href={`/celebrities/${celebrity.id}`}>
-                    <a>{celebrity.name}</a>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No celebrities</p>
-          )}
+      <main>
+        {isLoading && <MoonLoader />}
+        {error && <p>There was an error retrieving following data</p>}
+        {followingData && (
+          <>
+            <h1>Celebrities you follow</h1>
+            {followingData.celebrities.length ? (
+              <ul>
+                {followingData.celebrities.map((celebrity) => (
+                  <li key={celebrity.id}>
+                    <Link href={`/celebrities/${celebrity.id}`}>
+                      <a>{celebrity.name}</a>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No celebrities you follow</p>
+            )}
 
-          <h1>Recent outfits from celebrities you follow</h1>
-          {recentOutfits.map((outfit) => (
-            <OutfitCard
-              id={outfit.id}
-              image={outfit.image}
-              celebrity={outfit.celebrity.name}
-              description={outfit.description}
-              key={outfit.id}
-            />
-          ))}
-        </main>
-      </>
-    );
-  }
-
-  return <MoonLoader />;
+            <h1>Recent outfits from celebrities you follow</h1>
+            {followingData.recentOutfits.length ? (
+              followingData.recentOutfits.map((outfit) => (
+                <OutfitCard
+                  id={outfit.id}
+                  image={outfit.image}
+                  celebrity={outfit.celebrity.name}
+                  description={outfit.description}
+                  key={outfit.id}
+                />
+              ))
+            ) : (
+              <p>No recent outfits from celebrities you follow</p>
+            )}
+          </>
+        )}
+      </main>
+    </>
+  );
 };
 
 const OutfitCard = ({ id, image, celebrity, description }: OutfitCardProps) => {
@@ -82,6 +88,25 @@ const OutfitCard = ({ id, image, celebrity, description }: OutfitCardProps) => {
       </div>
     </div>
   );
+};
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const authSession = await getAuthSession(ctx);
+
+  if (!authSession) {
+    return {
+      redirect: {
+        destination: `/api/auth/signin?callbackUrl=${ctx.resolvedUrl}`,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      authSession,
+    },
+  };
 };
 
 export default Following;

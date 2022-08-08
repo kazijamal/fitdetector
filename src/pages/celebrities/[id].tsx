@@ -1,10 +1,14 @@
-import type { NextPage } from 'next';
+import type {
+  NextPage,
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
 import Head from 'next/head';
-import { trpc } from '../../utils/trpc';
-import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
-import MoonLoader from 'react-spinners/MoonLoader';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { trpc } from '../../utils/trpc';
+import { getAuthSession } from '../../server/common/get-server-session';
+import MoonLoader from 'react-spinners/MoonLoader';
 
 type OutfitCardProps = {
   id: string;
@@ -12,39 +16,52 @@ type OutfitCardProps = {
   description: string | null;
 };
 
-const Celebrity: NextPage = () => {
+const Celebrity: NextPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ authSession }) => {
   const router = useRouter();
-  const id = typeof router.query.id === 'string' ? router.query.id : '';
-  const { status } = useSession();
-
   const utils = trpc.useContext();
-  const { data: celebrityData } = trpc.useQuery(['celebrity.getById', { id }]);
+  const id = typeof router.query.id === 'string' ? router.query.id : '';
+
+  const {
+    data: celebrityData,
+    isLoading,
+    error,
+  } = trpc.useQuery(['celebrity.getById', { id }]);
+
   const followMutation = trpc.useMutation(['celebrity.follow'], {
     onSuccess: (data) => {
       utils.invalidateQueries(['celebrity.getById']);
     },
   });
+
   const unfollowMutation = trpc.useMutation(['celebrity.unfollow'], {
     onSuccess: (data) => {
       utils.invalidateQueries(['celebrity.getById']);
     },
   });
 
-  const handleFollowClick = async () => {
-    followMutation.mutate({ id });
-  };
+  if (isLoading) {
+    return (
+      <>
+        <Head>
+          <title>FitDetector</title>
+        </Head>
 
-  const handleUnfollowClick = async () => {
-    unfollowMutation.mutate({ id });
-  };
+        <main>
+          <MoonLoader />
+        </main>
+      </>
+    );
+  }
 
-  if (status === 'authenticated' && celebrityData) {
+  if (authSession && celebrityData) {
     const { celebrity, following } = celebrityData;
 
     return (
       <>
         <Head>
-          <title>FitDetector</title>
+          <title>{celebrity.name} - FitDetector</title>
         </Head>
 
         <main>
@@ -52,9 +69,21 @@ const Celebrity: NextPage = () => {
 
           <h2>{celebrity._count.followers} followers</h2>
           {following ? (
-            <button onClick={handleUnfollowClick}>Unfollow</button>
+            <button
+              onClick={() => {
+                unfollowMutation.mutate({ id });
+              }}
+            >
+              Unfollow
+            </button>
           ) : (
-            <button onClick={handleFollowClick}>Follow</button>
+            <button
+              onClick={() => {
+                followMutation.mutate({ id });
+              }}
+            >
+              Follow
+            </button>
           )}
 
           {celebrity.rating && (
@@ -75,13 +104,13 @@ const Celebrity: NextPage = () => {
     );
   }
 
-  if (status === 'unauthenticated' && celebrityData) {
+  if (!authSession && celebrityData) {
     const { celebrity } = celebrityData;
 
     return (
       <>
         <Head>
-          <title>FitDetector</title>
+          <title>{celebrity.name} - FitDetector</title>
         </Head>
 
         <main>
@@ -107,7 +136,17 @@ const Celebrity: NextPage = () => {
     );
   }
 
-  return <MoonLoader />;
+  return (
+    <>
+      <Head>
+        <title>FitDetector</title>
+      </Head>
+
+      <main>
+        <p>There was an error retrieving celebrity information</p>
+      </main>
+    </>
+  );
 };
 
 const OutfitCard = ({ id, image, description }: OutfitCardProps) => {
@@ -128,6 +167,25 @@ const OutfitCard = ({ id, image, description }: OutfitCardProps) => {
       </div>
     </div>
   );
+};
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const authSession = await getAuthSession(ctx);
+
+  if (!authSession) {
+    return {
+      redirect: {
+        destination: `/api/auth/signin?callbackUrl=${ctx.resolvedUrl}`,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      authSession,
+    },
+  };
 };
 
 export default Celebrity;
