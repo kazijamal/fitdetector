@@ -38,11 +38,14 @@ const SubmitClothing: NextPage = () => {
       </Head>
 
       <main className='container mx-auto flex flex-col items-center justify-center min-h-screen p-4'>
-        <h1 className='text-3xl font-bold text-gray-700'>Submit Clothing</h1>
+        <h1 className='text-3xl font-bold'>Submit Clothing</h1>
 
-        <form className='flex flex-col gap-5 m-5' onSubmit={handleSubmit}>
+        <form
+          className='flex flex-col gap-5 my-5 w-full max-w-md'
+          onSubmit={handleSubmit}
+        >
           <label>
-            <p className='text-lg font-medium'>Clothing Type</p>
+            <p className='text-lg'>Clothing Type</p>
             <input
               type='text'
               placeholder='Jacket'
@@ -51,11 +54,11 @@ const SubmitClothing: NextPage = () => {
                 setType(e.target.value);
               }}
               required
-              className='my-3 px-3 py-2 border border-gray-300 rounded-md w-full'
+              className='input input-bordered w-full mt-3'
             />
           </label>
           <label>
-            <p className='text-lg font-medium'>Brand</p>
+            <p className='text-lg'>Brand</p>
             <input
               type='text'
               placeholder='Nike'
@@ -64,39 +67,36 @@ const SubmitClothing: NextPage = () => {
                 setBrand(e.target.value);
               }}
               required
-              className='my-3 px-3 py-2 border border-gray-300 rounded-md w-full'
+              className='input input-bordered w-full mt-3'
             />
           </label>
           <label>
-            <p className='text-lg font-medium'>Price</p>
-            <p className='text-sm font-normal'>in USD (optional)</p>
+            <p className='text-lg'>Price</p>
+            <p className='text-sm font-light'>in USD (optional)</p>
             <input
               type='number'
-              placeholder='59.99'
+              placeholder='129.99'
               value={price}
               onChange={(e) => {
                 setPrice(e.target.value);
               }}
-              className='my-3 px-3 py-2 border border-gray-300 rounded-md w-full'
+              className='input input-bordered w-full mt-3'
             />
           </label>
           <label>
-            <p className='text-lg font-medium'>Link to Clothing</p>
+            <p className='text-lg'>Link to Clothing</p>
             <input
               type='text'
-              placeholder='https://www.ssense.com/en-us/men/product/nike/gray-solo-swoosh-sweatshirt/10205041'
+              placeholder='https://www.nike.com/t/sportswear-tech-fleece-mens-full-zip-hoodie-5ZtTtk'
               value={link}
               onChange={(e) => {
                 setLink(e.target.value);
               }}
               required
-              className='my-3 px-3 py-2 border border-gray-300 rounded-md w-full'
+              className='input input-bordered w-full mt-3'
             />
           </label>
-          <button
-            type='submit'
-            className='bg-purple-400 hover:bg-purple-600 text-white py-2 px-4 rounded'
-          >
+          <button type='submit' className='btn btn-primary'>
             Submit Clothing
           </button>
         </form>

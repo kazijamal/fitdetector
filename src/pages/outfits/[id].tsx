@@ -14,6 +14,7 @@ import { isValidHttpUrl } from '../../utils/utils';
 import AuthNavbar from '../../components/AuthNavbar';
 import Navbar from '../../components/Navbar';
 import LoadingPage from '../../components/LoadingPage';
+import ErrorPage from '../../components/ErrorPage';
 
 const Outfit: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
@@ -359,17 +360,7 @@ const Outfit: NextPage<
     );
   }
 
-  return (
-    <>
-      <Head>
-        <title>FitDetector</title>
-      </Head>
-
-      <main>
-        <p>There was an error retrieving outfit information</p>
-      </main>
-    </>
-  );
+  return <ErrorPage />;
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {

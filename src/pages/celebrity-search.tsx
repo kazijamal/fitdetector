@@ -89,8 +89,8 @@ const CelebritySearch: NextPage<
                     <tr>
                       <th>Name</th>
                       <th>Rating</th>
-                      <th># Outfits</th>
-                      <th># Followers</th>
+                      <th>Outfits</th>
+                      <th>Followers</th>
                     </tr>
                   </thead>
                   <tbody className='bg-base-200'>

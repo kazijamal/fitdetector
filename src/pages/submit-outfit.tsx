@@ -43,11 +43,14 @@ const SubmitOutfit: NextPage = () => {
       </Head>
 
       <main className='container mx-auto flex flex-col items-center justify-center min-h-screen p-4'>
-        <h1 className='text-3xl font-bold text-gray-700'>Submit Outfit</h1>
+        <h1 className='text-3xl font-bold'>Submit Outfit</h1>
 
-        <form className='flex flex-col gap-5 m-5' onSubmit={handleSubmit}>
+        <form
+          className='flex flex-col gap-5 my-5 w-full max-w-md'
+          onSubmit={handleSubmit}
+        >
           <label>
-            <p className='text-lg font-medium'>Celebrity Name</p>
+            <p className='text-lg'>Celebrity Name</p>
             <input
               type='text'
               placeholder='John Doe'
@@ -56,24 +59,24 @@ const SubmitOutfit: NextPage = () => {
                 setCelebrityName(e.target.value);
               }}
               required
-              className='my-3 px-3 py-2 border border-gray-300 rounded-md w-full'
+              className='input input-bordered w-full mt-3'
             />
           </label>
           <label>
-            <p className='text-lg font-medium'>Image</p>
+            <p className='text-lg'>Image</p>
             <input
               type='file'
               accept='image/*'
               ref={fileInput}
-              className='my-3 px-3 py-2 border border-gray-300 rounded-md w-full'
+              className='w-full mt-3 file:btn file:mr-3'
               required
             />
           </label>
           <label>
-            <p className='text-lg font-medium'>Description</p>
-            <p className='text-sm font-normal'>
-              Put a question about a particular piece of clothing here
-              (optional)
+            <p className='text-lg'>Description</p>
+            <p className='text-sm font-light'>
+              Put a question about a particular piece of clothing or any other
+              information here (optional)
             </p>
             <textarea
               placeholder='What hoodie is he wearing?'
@@ -81,12 +84,12 @@ const SubmitOutfit: NextPage = () => {
               onChange={(e) => {
                 setDescription(e.target.value);
               }}
-              className='my-3 px-3 py-2 border border-gray-300 rounded-md w-full'
+              className='textarea textarea-bordered w-full mt-3'
             />
           </label>
           <label>
-            <p className='text-lg font-medium'>Source</p>
-            <p className='text-sm font-normal'>
+            <p className='text-lg'>Source</p>
+            <p className='text-sm font-light'>
               Link where you found this image (optional)
             </p>
             <input
@@ -96,13 +99,10 @@ const SubmitOutfit: NextPage = () => {
               onChange={(e) => {
                 setSource(e.target.value);
               }}
-              className='my-3 px-3 py-2 border border-gray-300 rounded-md w-full'
+              className='input input-bordered w-full mt-3'
             />
           </label>
-          <button
-            type='submit'
-            className='bg-purple-400 hover:bg-purple-600 text-white py-2 px-4 rounded'
-          >
+          <button type='submit' className='btn btn-primary'>
             Submit Outfit
           </button>
         </form>
