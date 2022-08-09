@@ -4,7 +4,6 @@ import type {
   InferGetServerSidePropsType,
 } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { trpc } from '../../utils/trpc';
 import { getAuthSession } from '../../server/common/get-server-session';
@@ -13,13 +12,7 @@ import AuthNavbar from '../../components/AuthNavbar';
 import Navbar from '../../components/Navbar';
 import LoadingPage from '../../components/LoadingPage';
 import ErrorPage from '../../components/ErrorPage';
-
-type OutfitCardProps = {
-  id: string;
-  image: string;
-  description: string | null;
-  createdAt: Date;
-};
+import OutfitCard from '../../components/OutfitCard';
 
 const Celebrity: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
@@ -150,13 +143,7 @@ const Celebrity: NextPage<
             <div className='my-4 flex flex-col items-center gap-5 pb-8'>
               <h1 className='text-2xl font-bold'>Outfits</h1>
               {celebrity.outfits.map((outfit) => (
-                <OutfitCard
-                  id={outfit.id}
-                  image={outfit.image}
-                  description={outfit.description}
-                  createdAt={outfit.createdAt}
-                  key={outfit.id}
-                />
+                <OutfitCard outfit={outfit} key={outfit.id} />
               ))}
             </div>
           </div>
@@ -218,13 +205,7 @@ const Celebrity: NextPage<
             <div className='my-4 flex flex-col items-center gap-5 pb-8'>
               <h1 className='text-2xl font-bold'>Outfits</h1>
               {celebrity.outfits.map((outfit) => (
-                <OutfitCard
-                  id={outfit.id}
-                  image={outfit.image}
-                  description={outfit.description}
-                  createdAt={outfit.createdAt}
-                  key={outfit.id}
-                />
+                <OutfitCard outfit={outfit} key={outfit.id} />
               ))}
             </div>
           </div>
@@ -234,23 +215,6 @@ const Celebrity: NextPage<
   }
 
   return <ErrorPage />;
-};
-
-const OutfitCard = ({ id, image, description, createdAt }: OutfitCardProps) => {
-  return (
-    <div className='card card-normal max-w-sm shadow-lg bg-base-200'>
-      <img className='' src={image} alt='' />
-      <div className='card-body'>
-        {description && <p className=''>{description}</p>}
-        <p>Submitted on {createdAt.toLocaleString()}</p>
-        <div className='card-actions justify-end pt-3'>
-          <Link href={`/outfits/${id}`}>
-            <a className='btn btn-primary'>View Outfit</a>
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {

@@ -14,14 +14,7 @@ import MoonLoader from 'react-spinners/MoonLoader';
 
 import AuthNavbar from '../components/AuthNavbar';
 import Navbar from '../components/Navbar';
-
-type OutfitCardProps = {
-  id: string;
-  image: string;
-  celebrity: string;
-  description: string | null;
-  createdAt: Date;
-};
+import OutfitCard from '../components/OutfitCard';
 
 const Home: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
@@ -107,21 +100,16 @@ const Home: NextPage<
           </button>
         )}
 
-        <h1 className='m-3 text-2xl font-bold text-center'>Recently submitted outfits</h1>
+        <h1 className='m-3 text-2xl font-bold text-center'>
+          Recently submitted outfits
+        </h1>
         <div className='m-2 flex gap-5 flex-col items-center'>
           {isLoading && <MoonLoader />}
           {error && <p>There was an error retrieving recent outfits</p>}
           {recentOutfits &&
             (recentOutfits.length ? (
               recentOutfits.map((outfit) => (
-                <OutfitCard
-                  id={outfit.id}
-                  image={outfit.image}
-                  celebrity={outfit.celebrity.name}
-                  description={outfit.description}
-                  createdAt={outfit.createdAt}
-                  key={outfit.id}
-                />
+                <OutfitCard outfit={outfit} key={outfit.id} />
               ))
             ) : (
               <p>No recent outfits</p>
@@ -129,30 +117,6 @@ const Home: NextPage<
         </div>
       </main>
     </>
-  );
-};
-
-const OutfitCard = ({
-  id,
-  image,
-  celebrity,
-  description,
-  createdAt,
-}: OutfitCardProps) => {
-  return (
-    <div className='card card-normal max-w-sm shadow-lg bg-base-200'>
-      <img className='' src={image} alt='' />
-      <div className='card-body'>
-        <h2 className='card-title'>{celebrity}</h2>
-        {description && <p className=''>{description}</p>}
-        <p>Submitted on {createdAt.toLocaleString()}</p>
-        <div className='card-actions justify-end pt-3'>
-          <Link href={`/outfits/${id}`}>
-            <a className='btn btn-primary'>View Outfit</a>
-          </Link>
-        </div>
-      </div>
-    </div>
   );
 };
 

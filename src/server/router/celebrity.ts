@@ -16,6 +16,7 @@ export const celebrityRouter = createRouter()
           where: { id },
           include: {
             outfits: {
+              include: { celebrity: true },
               orderBy: [{ createdAt: 'desc' }],
             },
             _count: { select: { followers: true } },
@@ -33,7 +34,13 @@ export const celebrityRouter = createRouter()
       } else {
         const celebrity = await ctx.prisma.celebrity.findUniqueOrThrow({
           where: { id },
-          include: { outfits: true, _count: { select: { followers: true } } },
+          include: {
+            outfits: {
+              include: { celebrity: true },
+              orderBy: [{ createdAt: 'desc' }],
+            },
+            _count: { select: { followers: true } },
+          },
         });
 
         return { celebrity };
