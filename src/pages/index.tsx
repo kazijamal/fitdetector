@@ -7,7 +7,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { signIn, signOut } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import { trpc } from '../utils/trpc';
 import { getAuthSession } from '../server/common/get-server-session';
 import MoonLoader from 'react-spinners/MoonLoader';

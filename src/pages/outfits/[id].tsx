@@ -111,18 +111,16 @@ const Outfit: NextPage<
               <>
                 <div className='my-3'>
                   <h2 className='text-lg font-semibold'>Source</h2>
-                  <p>
-                    {isValidHttpUrl(outfit.source) ? (
-                      <a
-                        href={outfit.source}
-                        className='link link-accent link-hover'
-                      >
-                        {outfit.source}
-                      </a>
-                    ) : (
-                      <p>{outfit.source}</p>
-                    )}
-                  </p>
+                  {isValidHttpUrl(outfit.source) ? (
+                    <a
+                      href={outfit.source}
+                      className='link link-accent link-hover'
+                    >
+                      {outfit.source}
+                    </a>
+                  ) : (
+                    <p>{outfit.source}</p>
+                  )}
                 </div>
               </>
             )}
@@ -298,18 +296,16 @@ const Outfit: NextPage<
               <>
                 <div className='my-3'>
                   <h2 className='text-lg font-semibold'>Source</h2>
-                  <p>
-                    {isValidHttpUrl(outfit.source) ? (
-                      <a
-                        href={outfit.source}
-                        className='link link-accent link-hover'
-                      >
-                        {outfit.source}
-                      </a>
-                    ) : (
-                      <p>{outfit.source}</p>
-                    )}
-                  </p>
+                  {isValidHttpUrl(outfit.source) ? (
+                    <a
+                      href={outfit.source}
+                      className='link link-accent link-hover'
+                    >
+                      {outfit.source}
+                    </a>
+                  ) : (
+                    <p>{outfit.source}</p>
+                  )}
                 </div>
               </>
             )}

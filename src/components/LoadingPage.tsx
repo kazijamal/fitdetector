@@ -8,7 +8,7 @@ const LoadingPage = () => {
         <title>FitDetector</title>
       </Head>
 
-      <main className='flex justify-center items-center h-screen'>
+      <main className='flex flex-col justify-center items-center h-screen'>
         <MoonLoader />
       </main>
     </>
