@@ -55,7 +55,7 @@ const Home: NextPage<
 
       <main className='container mx-auto flex flex-col items-center p-4'>
         <h1 className='text-6xl font-extrabold m-2'>
-          <span className='text-primary'>Fit</span>Detector
+          <span className='text-secondary'>Fit</span>Detector
         </h1>
         <h2 className='text-lg text-center m-2'>
           Find out what clothes your favorite celebrities are wearing
@@ -107,7 +107,7 @@ const Home: NextPage<
           </button>
         )}
 
-        <h1 className='m-3 text-2xl font-bold'>Recently submitted outfits</h1>
+        <h1 className='m-3 text-2xl font-bold text-center'>Recently submitted outfits</h1>
         <div className='m-2 flex gap-5 flex-col items-center'>
           {isLoading && <MoonLoader />}
           {error && <p>There was an error retrieving recent outfits</p>}

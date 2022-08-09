@@ -6,6 +6,8 @@ import { trpc } from '../utils/trpc';
 import { getAuthSession } from '../server/common/get-server-session';
 import { fileToBase64 } from '../utils/utils';
 
+import AuthNavbar from '../components/AuthNavbar';
+
 const SubmitOutfit: NextPage = () => {
   const router = useRouter();
   const [celebrityName, setCelebrityName] = useState('');
@@ -42,7 +44,9 @@ const SubmitOutfit: NextPage = () => {
         <title>Submit Outfit - FitDetector</title>
       </Head>
 
-      <main className='container mx-auto flex flex-col items-center justify-center min-h-screen p-4'>
+      <AuthNavbar />
+
+      <main className='container mx-auto flex flex-col items-center min-h-screen py-8 px-4'>
         <h1 className='text-3xl font-bold'>Submit Outfit</h1>
 
         <form

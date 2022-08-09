@@ -27,9 +27,9 @@ const Navbar = () => {
             className='menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52'
           ></ul>
         </div>
-        <Link href='/'>
-          <a className='btn btn-ghost normal-case text-xl'>FitDetector</a>
-        </Link>
+        <a className='btn btn-ghost normal-case text-xl'>
+          <span className='text-secondary'>Fit</span>Detector
+        </a>
       </div>
       <div className='navbar-center hidden lg:flex'>
         <ul className='menu menu-horizontal p-0'></ul>

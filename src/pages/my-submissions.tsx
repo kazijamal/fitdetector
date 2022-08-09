@@ -1,21 +1,21 @@
 import type { NextPage, GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { trpc } from '../utils/trpc';
 import { getAuthSession } from '../server/common/get-server-session';
 import MoonLoader from 'react-spinners/MoonLoader';
+
+import AuthNavbar from '../components/AuthNavbar';
 
 type OutfitCardProps = {
   id: string;
   image: string;
   celebrity: string;
   description: string | null;
+  createdAt: Date;
 };
 
 const MySubmissions: NextPage = () => {
-  const router = useRouter();
-
   const {
     data: outfits,
     isLoading,
@@ -28,43 +28,51 @@ const MySubmissions: NextPage = () => {
         <title>My Submissions - FitDetector</title>
       </Head>
 
-      <main>
-        <h1>Outfits you submitted</h1>
-        {isLoading && <MoonLoader />}
-        {error && <p>There was an error retrieving outfits you submitted</p>}
-        {outfits &&
-          (outfits.length ? (
-            outfits.map((outfit) => (
-              <OutfitCard
-                id={outfit.id}
-                image={outfit.image}
-                celebrity={outfit.celebrity.name}
-                description={outfit.description}
-                key={outfit.id}
-              />
-            ))
-          ) : (
-            <p>No outfits you submitted</p>
-          ))}
+      <AuthNavbar />
+
+      <main className='container mx-auto flex flex-col items-center p-4'>
+        <h1 className='m-3 text-2xl font-bold text-center'>Outfits you submitted</h1>
+        <div className='m-2 flex gap-5 flex-col items-center'>
+          {isLoading && <MoonLoader />}
+          {error && <p>There was an error retrieving outfits you submitted</p>}
+          {outfits &&
+            (outfits.length ? (
+              outfits.map((outfit) => (
+                <OutfitCard
+                  id={outfit.id}
+                  image={outfit.image}
+                  celebrity={outfit.celebrity.name}
+                  description={outfit.description}
+                  createdAt={outfit.createdAt}
+                  key={outfit.id}
+                />
+              ))
+            ) : (
+              <p>No outfits you submitted</p>
+            ))}
+        </div>
       </main>
     </>
   );
 };
 
-const OutfitCard = ({ id, image, celebrity, description }: OutfitCardProps) => {
+const OutfitCard = ({
+  id,
+  image,
+  celebrity,
+  description,
+  createdAt,
+}: OutfitCardProps) => {
   return (
-    <div className='max-w-xs rounded overflow-hidden shadow-lg'>
-      <img className='w-full' src={image} />
-      <div className='px-6 py-4'>
-        <div className='font-bold text-xl mb-2'>{celebrity}</div>
-        {description && (
-          <p className='text-gray-700 text-base'>{description}</p>
-        )}
-        <div className='pt-4 pb-2'>
+    <div className='card card-normal max-w-sm shadow-lg bg-base-200'>
+      <img className='' src={image} alt='' />
+      <div className='card-body'>
+        <h2 className='card-title'>{celebrity}</h2>
+        {description && <p className=''>{description}</p>}
+        <p>Submitted on {createdAt.toLocaleString()}</p>
+        <div className='card-actions justify-end pt-3'>
           <Link href={`/outfits/${id}`}>
-            <a className='bg-purple-400 hover:bg-purple-600 text-white py-2 px-4 rounded'>
-              View outfit info
-            </a>
+            <a className='btn btn-primary'>View Outfit</a>
           </Link>
         </div>
       </div>

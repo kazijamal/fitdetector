@@ -44,7 +44,9 @@ const AuthNavbar = () => {
           </ul>
         </div>
         <Link href='/'>
-          <a className='btn btn-ghost normal-case text-xl'>FitDetector</a>
+          <a className='btn btn-ghost normal-case text-xl'>
+            <span className='text-secondary'>Fit</span>Detector
+          </a>
         </Link>
       </div>
       <div className='navbar-center hidden lg:flex'>

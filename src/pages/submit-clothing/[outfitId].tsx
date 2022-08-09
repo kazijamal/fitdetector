@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { trpc } from '../../utils/trpc';
 import { getAuthSession } from '../../server/common/get-server-session';
 
+import AuthNavbar from '../../components/AuthNavbar';
+
 const SubmitClothing: NextPage = () => {
   const router = useRouter();
   const outfitId =
@@ -37,7 +39,9 @@ const SubmitClothing: NextPage = () => {
         <title>Submit Clothing | FitDetector</title>
       </Head>
 
-      <main className='container mx-auto flex flex-col items-center justify-center min-h-screen p-4'>
+      <AuthNavbar />
+
+      <main className='container mx-auto flex flex-col items-center min-h-screen py-8 px-4'>
         <h1 className='text-3xl font-bold'>Submit Clothing</h1>
 
         <form

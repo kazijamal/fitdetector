@@ -41,7 +41,7 @@ const CelebritySearch: NextPage<
       {authSession ? <AuthNavbar /> : <Navbar />}
 
       <main className='container mx-auto flex flex-col items-center p-4'>
-        <h1 className='m-3 text-2xl font-bold'>Celebrity Search</h1>
+        <h1 className='m-3 text-2xl font-bold text-center'>Celebrity Search</h1>
 
         <form
           className='w-full max-w-md m-2 form-control'
