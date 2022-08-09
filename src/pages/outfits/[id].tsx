@@ -115,7 +115,7 @@ const Outfit: NextPage<
                   {isValidHttpUrl(outfit.source) ? (
                     <a
                       href={outfit.source}
-                      className='link link-accent link-hover'
+                      className='link link-accent link-hover break-all'
                     >
                       {outfit.source}
                     </a>
@@ -192,7 +192,7 @@ const Outfit: NextPage<
               <div className='my-3 flex gap-5 flex-col items-center'>
                 {outfit.clothing.map((clothing) => (
                   <div
-                    className='card w-full bg-base-200 shadow-xl'
+                    className='card card-compact w-full bg-base-200 shadow-xl'
                     key={clothing.id}
                   >
                     <div className='card-body'>
@@ -207,7 +207,7 @@ const Outfit: NextPage<
                           {clothing.price}
                         </p>
                       )}
-                      <p>
+                      <p className='break-all'>
                         <strong className='font-semibold'>Link:</strong>{' '}
                         <a
                           href={clothing.link}
@@ -275,7 +275,7 @@ const Outfit: NextPage<
                       </svg>
                     </div>
                     <div className='stat-title'>Rating</div>
-                    <div className='stat-value'>{outfit.rating}/10</div>
+                    <div className='stat-value'>10/10</div>
                     <div className='stat-desc'>
                       {outfit._count.ratings} ratings
                     </div>
@@ -300,7 +300,7 @@ const Outfit: NextPage<
                   {isValidHttpUrl(outfit.source) ? (
                     <a
                       href={outfit.source}
-                      className='link link-accent link-hover'
+                      className='link link-accent link-hover break-all'
                     >
                       {outfit.source}
                     </a>
@@ -323,7 +323,7 @@ const Outfit: NextPage<
               <div className='my-3 flex gap-5 flex-col items-center'>
                 {outfit.clothing.map((clothing) => (
                   <div
-                    className='card w-full bg-base-200 shadow-xl'
+                    className='card card-compact w-full bg-base-200 shadow-xl'
                     key={clothing.id}
                   >
                     <div className='card-body'>
@@ -342,7 +342,7 @@ const Outfit: NextPage<
                         <strong className='font-semibold'>Link:</strong>{' '}
                         <a
                           href={clothing.link}
-                          className='link link-accent link-hover'
+                          className='link link-accent link-hover break-all'
                         >
                           {clothing.link}
                         </a>
