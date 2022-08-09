@@ -65,11 +65,12 @@ export const outfitRouter = createRouter()
 
         const outfit = await ctx.prisma.outfit.findUniqueOrThrow({
           where: { id },
-          include: { celebrity: true, user: true, clothing: true },
-        });
-
-        const following = await ctx.prisma.follow.findFirst({
-          where: { userId, celebrityId: outfit.celebrity.id },
+          include: {
+            celebrity: true,
+            user: true,
+            clothing: true,
+            _count: { select: { ratings: true } },
+          },
         });
 
         const rating = await ctx.prisma.outfitRating.findFirst({
@@ -78,13 +79,17 @@ export const outfitRouter = createRouter()
 
         return {
           outfit,
-          following: Boolean(following),
           rating: rating?.value,
         };
       } else {
         const outfit = await ctx.prisma.outfit.findUniqueOrThrow({
           where: { id },
-          include: { celebrity: true, user: true, clothing: true },
+          include: {
+            celebrity: true,
+            user: true,
+            clothing: true,
+            _count: { select: { ratings: true } },
+          },
         });
 
         return { outfit };

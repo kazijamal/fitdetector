@@ -22,13 +22,13 @@ const SubmitOutfit: NextPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (fileInput?.current?.files && fileInput.current.files[0]) {
-      const outfitPhotoBase64 = await fileToBase64(fileInput.current.files[0]);
+      const inputPhotoBase64 = await fileToBase64(fileInput.current.files[0]);
       const uploadImageRes = await fetch('/api/image-upload', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ imageBase64: outfitPhotoBase64 }),
+        body: JSON.stringify({ imageBase64: inputPhotoBase64 }),
       });
       const uploadImageResBody = await uploadImageRes.json();
       const image = uploadImageResBody.uploadedImageUrl;
