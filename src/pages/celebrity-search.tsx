@@ -50,7 +50,7 @@ const CelebritySearch: NextPage<
           <div className='input-group'>
             <input
               type='text'
-              className='input input-bordered w-full'
+              className='input input-bordered w-full text-lg'
               placeholder='Search celebrities...'
               value={searchQueryInput}
               onChange={(e) => setSearchQueryInput(e.target.value)}

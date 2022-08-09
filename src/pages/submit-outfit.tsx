@@ -54,7 +54,7 @@ const SubmitOutfit: NextPage = () => {
           onSubmit={handleSubmit}
         >
           <label>
-            <p className='text-lg'>Celebrity Name</p>
+            <p className='text-xl'>Celebrity Name</p>
             <input
               type='text'
               placeholder='John Doe'
@@ -63,21 +63,21 @@ const SubmitOutfit: NextPage = () => {
                 setCelebrityName(e.target.value);
               }}
               required
-              className='input input-bordered w-full mt-3'
+              className='input input-bordered w-full mt-3 text-lg'
             />
           </label>
           <label>
-            <p className='text-lg'>Image</p>
+            <p className='text-xl'>Image</p>
             <input
               type='file'
               accept='image/*'
               ref={fileInput}
-              className='w-full mt-3 file:btn file:mr-3'
+              className='w-full mt-3 file:btn file:mr-3 text-lg'
               required
             />
           </label>
           <label>
-            <p className='text-lg'>Description</p>
+            <p className='text-xl'>Description</p>
             <p className='text-sm font-light'>
               Put a question about a particular piece of clothing or any other
               information here (optional)
@@ -88,11 +88,11 @@ const SubmitOutfit: NextPage = () => {
               onChange={(e) => {
                 setDescription(e.target.value);
               }}
-              className='textarea textarea-bordered w-full mt-3'
+              className='textarea textarea-bordered w-full mt-3 text-lg'
             />
           </label>
           <label>
-            <p className='text-lg'>Source</p>
+            <p className='text-xl'>Source</p>
             <p className='text-sm font-light'>
               Link where you found this image (optional)
             </p>
@@ -103,7 +103,7 @@ const SubmitOutfit: NextPage = () => {
               onChange={(e) => {
                 setSource(e.target.value);
               }}
-              className='input input-bordered w-full mt-3'
+              className='input input-bordered w-full mt-3 text-lg'
             />
           </label>
           <button type='submit' className='btn btn-primary'>

@@ -49,7 +49,7 @@ const SubmitClothing: NextPage = () => {
           onSubmit={handleSubmit}
         >
           <label>
-            <p className='text-lg'>Clothing Type</p>
+            <p className='text-xl'>Clothing Type</p>
             <input
               type='text'
               placeholder='Jacket'
@@ -58,11 +58,11 @@ const SubmitClothing: NextPage = () => {
                 setType(e.target.value);
               }}
               required
-              className='input input-bordered w-full mt-3'
+              className='input input-bordered w-full mt-3 text-lg'
             />
           </label>
           <label>
-            <p className='text-lg'>Brand</p>
+            <p className='text-xl'>Brand</p>
             <input
               type='text'
               placeholder='Nike'
@@ -71,11 +71,11 @@ const SubmitClothing: NextPage = () => {
                 setBrand(e.target.value);
               }}
               required
-              className='input input-bordered w-full mt-3'
+              className='input input-bordered w-full mt-3 text-lg'
             />
           </label>
           <label>
-            <p className='text-lg'>Price</p>
+            <p className='text-xl'>Price</p>
             <p className='text-sm font-light'>in USD (optional)</p>
             <input
               type='number'
@@ -84,11 +84,11 @@ const SubmitClothing: NextPage = () => {
               onChange={(e) => {
                 setPrice(e.target.value);
               }}
-              className='input input-bordered w-full mt-3'
+              className='input input-bordered w-full mt-3 text-lg'
             />
           </label>
           <label>
-            <p className='text-lg'>Link to Clothing</p>
+            <p className='text-xl'>Link to Clothing</p>
             <input
               type='text'
               placeholder='https://www.nike.com/t/sportswear-tech-fleece-mens-full-zip-hoodie-5ZtTtk'
@@ -97,7 +97,7 @@ const SubmitClothing: NextPage = () => {
                 setLink(e.target.value);
               }}
               required
-              className='input input-bordered w-full mt-3'
+              className='input input-bordered w-full mt-3 text-lg'
             />
           </label>
           <button type='submit' className='btn btn-primary'>
