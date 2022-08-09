@@ -129,6 +129,7 @@ export const celebrityRouter = createRouter()
         where: {
           name: { contains: query },
         },
+        include: { _count: { select: { outfits: true, followers: true } } },
       });
       return celebrities;
     },

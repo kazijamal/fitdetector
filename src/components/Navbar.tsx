@@ -3,7 +3,7 @@ import { signIn } from 'next-auth/react';
 
 const Navbar = () => {
   return (
-    <nav className='navbar bg-base-200'>
+    <nav className='navbar bg-base-200 no-animation'>
       <div className='navbar-start'>
         <div className='dropdown'>
           <label tabIndex={0} className='btn btn-ghost lg:hidden'>

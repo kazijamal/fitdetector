@@ -11,6 +11,7 @@ import { signIn, signOut } from 'next-auth/react';
 import { trpc } from '../utils/trpc';
 import { getAuthSession } from '../server/common/get-server-session';
 import MoonLoader from 'react-spinners/MoonLoader';
+
 import AuthNavbar from '../components/AuthNavbar';
 import Navbar from '../components/Navbar';
 
@@ -52,7 +53,7 @@ const Home: NextPage<
 
       {authSession ? <AuthNavbar /> : <Navbar />}
 
-      <main className='container mx-auto flex flex-col items-center justify-center min-h-screen p-4'>
+      <main className='container mx-auto flex flex-col items-center p-4'>
         <h1 className='text-6xl font-extrabold m-2'>
           <span className='text-primary'>Fit</span>Detector
         </h1>
@@ -93,7 +94,7 @@ const Home: NextPage<
           </button>
         )}
 
-        <h2 className='m-3 text-2xl font-bold'>Recently submitted outfits</h2>
+        <h1 className='m-3 text-2xl font-bold'>Recently submitted outfits</h1>
         <div className='m-2 flex gap-5 flex-col items-center'>
           {isLoading && <MoonLoader />}
           {error && <p>There was an error retrieving recent outfits</p>}
@@ -134,7 +135,7 @@ const OutfitCard = ({
         <p>Submitted on {createdAt.toLocaleString()}</p>
         <div className='card-actions justify-end pt-3'>
           <Link href={`/outfits/${id}`}>
-            <a className='btn btn-primary'>View outfit info</a>
+            <a className='btn btn-primary'>View Outfit</a>
           </Link>
         </div>
       </div>
