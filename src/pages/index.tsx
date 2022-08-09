@@ -143,7 +143,7 @@ const OutfitCard = ({
     <div className='card card-normal max-w-sm shadow-lg bg-base-200'>
       <img className='' src={image} alt='' />
       <div className='card-body'>
-        <div className='card-title'>{celebrity}</div>
+        <h2 className='card-title'>{celebrity}</h2>
         {description && <p className=''>{description}</p>}
         <p>Submitted on {createdAt.toLocaleString()}</p>
         <div className='card-actions justify-end pt-3'>

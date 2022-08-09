@@ -8,7 +8,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { trpc } from '../../utils/trpc';
 import { getAuthSession } from '../../server/common/get-server-session';
-import MoonLoader from 'react-spinners/MoonLoader';
+
+import LoadingPage from '../../components/LoadingPage';
 
 type OutfitCardProps = {
   id: string;
@@ -42,17 +43,7 @@ const Celebrity: NextPage<
   });
 
   if (isLoading) {
-    return (
-      <>
-        <Head>
-          <title>FitDetector</title>
-        </Head>
-
-        <main>
-          <MoonLoader />
-        </main>
-      </>
-    );
+    return <LoadingPage />;
   }
 
   if (authSession && celebrityData) {
