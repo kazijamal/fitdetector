@@ -12,10 +12,6 @@ datasource db {
     referentialIntegrity = "prisma"
 }
 
-model Example {
-    id String @id @default(cuid())
-}
-
 // Custom
 model Outfit {
     id          String         @id @default(cuid())
@@ -52,7 +48,6 @@ model Clothing {
     brand     String
     price     Float?
     link      String
-    image     String?
     vote      Int            @default(0)
     votes     ClothingVote[]
 }
@@ -67,10 +62,11 @@ model ClothingVote {
 }
 
 model Celebrity {
-    id      String   @id @default(cuid())
-    name    String
-    outfits Outfit[]
-    Follow  Follow[]
+    id        String   @id @default(cuid())
+    name      String
+    rating    Float?
+    outfits   Outfit[]
+    followers Follow[]
 }
 
 model Follow {

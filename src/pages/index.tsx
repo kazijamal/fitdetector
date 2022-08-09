@@ -1,24 +1,37 @@
-import type { NextPage } from 'next';
-import Link from 'next/link';
+import type {
+  NextPage,
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
 import Head from 'next/head';
-import { authOptions as nextAuthOptions } from './api/auth/[...nextauth]';
-import { useSession, signIn, signOut } from 'next-auth/react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { signIn } from 'next-auth/react';
 import { trpc } from '../utils/trpc';
+import { getAuthSession } from '../server/common/get-server-session';
 import MoonLoader from 'react-spinners/MoonLoader';
 
-type OutfitCardProps = {
-  image: string;
-  celebrity: string;
-  description: string | null;
-};
+import AuthNavbar from '../components/AuthNavbar';
+import Navbar from '../components/Navbar';
+import OutfitCard from '../components/OutfitCard';
 
-const Home: NextPage = () => {
-  const { data: session, status } = useSession();
+const Home: NextPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ authSession }) => {
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
+
   const {
     data: recentOutfits,
     isLoading,
-    isError,
+    error,
   } = trpc.useQuery(['outfit.getRecent']);
+
+  const handleSearchSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    router.push(`/celebrity-search?q=${searchQuery}`);
+  };
 
   return (
     <>
@@ -31,112 +44,90 @@ const Home: NextPage = () => {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      <main className='container mx-auto flex flex-col items-center justify-center min-h-screen p-4'>
-        <h1 className='text-6xl font-extrabold text-gray-700 m-2'>
-          <span className='text-purple-300'>Fit</span>Detector
+      {authSession ? <AuthNavbar /> : <Navbar />}
+
+      <main className='container mx-auto flex flex-col items-center p-4'>
+        <h1 className='text-6xl font-extrabold m-2'>
+          <span className='text-secondary'>Fit</span>Detector
         </h1>
-        <p className='text-lg text-gray-600 m-2 text-center'>
+        <h2 className='text-lg text-center m-2'>
           Find out what clothes your favorite celebrities are wearing
-        </p>
-        {status === 'authenticated' && (
-          <div className='flex'>
-            <Link href='/submit-outfit'>
-              <a className='m-1 bg-purple-400 hover:bg-purple-600 text-white py-2 px-4 rounded'>
-                Submit an outfit photo
-              </a>
-            </Link>
-            <button
-              className='m-1 bg-red-400 hover:bg-red-600 text-white py-2 px-4 rounded'
-              onClick={() => signOut()}
-            >
-              Sign out
-            </button>
-          </div>
-        )}
-        {status === 'unauthenticated' && (
-          <button
-            className='m-1 bg-purple-400 hover:bg-purple-600 text-white py-2 px-4 rounded'
-            onClick={() => signIn()}
-          >
-            Sign in to submit an outfit photo
-          </button>
-        )}
-        <form className='w-full max-w-md m-3'>
-          <label className='mb-2 text-sm font-medium text-gray-900 sr-only'>
-            Search
-          </label>
-          <div className='relative'>
-            <div className='flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none'>
+        </h2>
+
+        <form
+          className='w-full max-w-md m-2 form-control'
+          onSubmit={handleSearchSubmit}
+        >
+          <div className='input-group'>
+            <input
+              type='text'
+              className='input input-bordered w-full'
+              placeholder='Search celebrities...'
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              required
+            />
+            <button className='btn btn-square' type='submit'>
               <svg
-                aria-hidden='true'
-                className='w-5 h-5 text-gray-500'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
                 xmlns='http://www.w3.org/2000/svg'
+                className='h-6 w-6'
+                fill='none'
+                viewBox='0 0 24 24'
+                stroke='currentColor'
               >
                 <path
                   strokeLinecap='round'
                   strokeLinejoin='round'
                   strokeWidth='2'
                   d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'
-                ></path>
+                />
               </svg>
-            </div>
-            <input
-              type='search'
-              className='block p-4 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-purple-300 focus:border-purple-300'
-              placeholder='Search Celebrities...'
-            />
-            <button
-              type='submit'
-              className='text-white absolute right-2.5 bottom-2.5 bg-purple-400 hover:bg-purple-600 focus:ring-4 focus:outline-none focus:ring-purple-200 font-medium rounded-lg text-sm px-4 py-2'
-            >
-              Search
             </button>
           </div>
         </form>
 
-        <h2 className='m-3 text-2xl font-extrabold text-gray-700'>
-          Recently submitted outfit photos
-        </h2>
-        <div className='m-2 flex gap-3 flex-col items-center'>
+        <h2 className='text-lg text-center m-1'>or</h2>
+
+        {authSession ? (
+          <div className='flex flex-wrap'>
+            <Link href='/submit-outfit'>
+              <a className='btn btn-primary m-2'>Submit an Outfit</a>
+            </Link>
+          </div>
+        ) : (
+          <button className='btn btn-primary m-2' onClick={() => signIn()}>
+            Sign in to submit an outfit
+          </button>
+        )}
+
+        <h1 className='m-3 text-2xl font-bold text-center'>
+          Recently submitted outfits
+        </h1>
+        <div className='m-2 flex gap-5 flex-col items-center'>
           {isLoading && <MoonLoader />}
+          {error && <p>There was an error retrieving recent outfits</p>}
           {recentOutfits &&
-            recentOutfits.map((outfit) => (
-              <OutfitCard
-                image={outfit.image}
-                celebrity={outfit.celebrity.name}
-                description={outfit.description}
-                key={outfit.id}
-              />
+            (recentOutfits.length ? (
+              recentOutfits.map((outfit) => (
+                <OutfitCard outfit={outfit} key={outfit.id} />
+              ))
+            ) : (
+              <p>No recent outfits</p>
             ))}
-          {isError && <p>There was an error retrieving data</p>}
         </div>
       </main>
     </>
   );
 };
 
-const OutfitCard = ({ image, celebrity, description }: OutfitCardProps) => {
-  return (
-    <div className='max-w-xs rounded overflow-hidden shadow-lg'>
-      <img className='w-full' src={image} />
-      <div className='px-6 py-4'>
-        <div className='font-bold text-xl mb-2'>{celebrity}</div>
-        {description && (
-          <p className='text-gray-700 text-base'>{description}</p>
-        )}
-        <div className='pt-4 pb-2'>
-          <Link href='#'>
-            <a className='bg-purple-400 hover:bg-purple-600 text-white py-2 px-4 rounded'>
-              View outfit info
-            </a>
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const authSession = await getAuthSession(ctx);
+
+  return {
+    props: {
+      authSession,
+    },
+  };
 };
 
 export default Home;
