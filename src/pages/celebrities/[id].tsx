@@ -172,15 +172,6 @@ const OutfitCard = ({ id, image, description }: OutfitCardProps) => {
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const authSession = await getAuthSession(ctx);
 
-  if (!authSession) {
-    return {
-      redirect: {
-        destination: `/api/auth/signin?callbackUrl=${ctx.resolvedUrl}`,
-        permanent: false,
-      },
-    };
-  }
-
   return {
     props: {
       authSession,
