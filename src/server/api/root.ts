@@ -9,9 +9,9 @@ import { celebrityRouter } from './routers/celebrity';
  * All routers added in /api/routers should be manually added here
  */
 export const appRouter = createTRPCRouter({
-    outfit: outfitRouter,
-    clothing: clothingRouter,
-    celebrity: celebrityRouter,
+  outfit: outfitRouter,
+  clothing: clothingRouter,
+  celebrity: celebrityRouter,
 });
 
 // export type definition of API

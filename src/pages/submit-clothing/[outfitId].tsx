@@ -2,7 +2,7 @@ import type { NextPage, GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { trpc } from '../../utils/trpc';
+import { api } from '../../utils/api';
 import { getServerAuthSession } from '../../server/auth';
 
 import AuthNavbar from '../../components/AuthNavbar';

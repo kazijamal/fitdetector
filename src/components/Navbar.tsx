@@ -6,7 +6,6 @@ const Navbar = () => {
     <nav className='navbar bg-base-200 no-animation'>
       <div className='navbar-start'>
         <Link href='/' className='btn btn-ghost normal-case text-xl'>
-
           <span className='text-secondary'>Fit</span>Detector
         </Link>
       </div>

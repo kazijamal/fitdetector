@@ -27,38 +27,27 @@ const AuthNavbar = () => {
             className='menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-200 rounded-box w-52'
           >
             <li>
-              <Link href='/following'>
-                Following
-              </Link>
+              <Link href='/following'>Following</Link>
             </li>
             <li>
-              <Link href='/my-submissions'>
-                Your Submissions
-              </Link>
+              <Link href='/my-submissions'>Your Submissions</Link>
             </li>
             <li>
-              <Link href='/api/auth/signout'>
-                Sign Out
-              </Link>
+              <Link href='/api/auth/signout'>Sign Out</Link>
             </li>
           </ul>
         </div>
         <Link href='/' className='btn btn-ghost normal-case text-xl'>
-
           <span className='text-secondary'>Fit</span>Detector
         </Link>
       </div>
       <div className='navbar-center hidden lg:flex'>
         <ul className='menu menu-horizontal p-0'>
           <li>
-            <Link href='/following'>
-              Following
-            </Link>
+            <Link href='/following'>Following</Link>
           </li>
           <li>
-            <Link href='/my-submissions'>
-              Your Submissions
-            </Link>
+            <Link href='/my-submissions'>Your Submissions</Link>
           </li>
           <li>
             <a onClick={() => signOut()}>Sign Out</a>
