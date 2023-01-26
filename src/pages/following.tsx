@@ -1,8 +1,8 @@
 import type { NextPage, GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { trpc } from '../utils/trpc';
-import { getAuthSession } from '../server/common/get-server-session';
+import { api } from '../utils/api';
+import { getServerAuthSession } from '../server/auth';
 import MoonLoader from 'react-spinners/MoonLoader';
 
 import AuthNavbar from '../components/AuthNavbar';
@@ -13,7 +13,7 @@ const Following: NextPage = () => {
     data: followingData,
     isLoading,
     error,
-  } = trpc.useQuery(['celebrity.following']);
+  } = api.celebrity.following.useQuery();
 
   return <>
     <Head>
@@ -67,7 +67,7 @@ const Following: NextPage = () => {
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const authSession = await getAuthSession(ctx);
+  const authSession = await getServerAuthSession(ctx);
 
   if (!authSession) {
     return {

@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { trpc } from '../../utils/trpc';
-import { getAuthSession } from '../../server/common/get-server-session';
+import { getServerAuthSession } from '../../server/auth';
 
 import AuthNavbar from '../../components/AuthNavbar';
 
@@ -16,7 +16,7 @@ const SubmitClothing: NextPage = () => {
   const [price, setPrice] = useState('');
   const [link, setLink] = useState('');
 
-  const clothingMutation = trpc.useMutation(['clothing.create'], {
+  const clothingMutation = api.clothing.create.useMutation({
     onSuccess: (data) => {
       router.push(`/outfits/${data.outfitId}`);
     },
@@ -110,7 +110,7 @@ const SubmitClothing: NextPage = () => {
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const authSession = await getAuthSession(ctx);
+  const authSession = await getServerAuthSession(ctx);
 
   if (!authSession) {
     return {

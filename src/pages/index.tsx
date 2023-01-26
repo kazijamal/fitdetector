@@ -8,8 +8,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
-import { trpc } from '../utils/trpc';
-import { getAuthSession } from '../server/common/get-server-session';
+import { api } from '../utils/api';
+import { getServerAuthSession } from '../server/auth';
 import MoonLoader from 'react-spinners/MoonLoader';
 
 import AuthNavbar from '../components/AuthNavbar';
@@ -26,7 +26,7 @@ const Home: NextPage<
     data: recentOutfits,
     isLoading,
     error,
-  } = trpc.useQuery(['outfit.getRecent']);
+  } = api.outfit.getRecent.useQuery();
 
   const handleSearchSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -119,7 +119,7 @@ const Home: NextPage<
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const authSession = await getAuthSession(ctx);
+  const authSession = await getServerAuthSession(ctx);
 
   return {
     props: {

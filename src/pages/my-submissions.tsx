@@ -1,7 +1,7 @@
 import type { NextPage, GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
-import { trpc } from '../utils/trpc';
-import { getAuthSession } from '../server/common/get-server-session';
+import { api } from '../utils/api';
+import { getServerAuthSession } from '../server/auth';
 import MoonLoader from 'react-spinners/MoonLoader';
 
 import AuthNavbar from '../components/AuthNavbar';
@@ -12,7 +12,7 @@ const MySubmissions: NextPage = () => {
     data: outfits,
     isLoading,
     error,
-  } = trpc.useQuery(['outfit.mySubmissions']);
+  } = api.outfit.mySubmissions.useQuery();
 
   return (
     <>
@@ -44,7 +44,7 @@ const MySubmissions: NextPage = () => {
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const authSession = await getAuthSession(ctx);
+  const authSession = await getServerAuthSession(ctx);
 
   if (!authSession) {
     return {

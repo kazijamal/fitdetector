@@ -2,8 +2,8 @@ import type { NextPage, GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useState, useRef } from 'react';
-import { trpc } from '../utils/trpc';
-import { getAuthSession } from '../server/common/get-server-session';
+import { api } from '../utils/api';
+import { getServerAuthSession } from '../server/auth';
 import { fileToBase64 } from '../utils/utils';
 
 import AuthNavbar from '../components/AuthNavbar';
@@ -15,7 +15,7 @@ const SubmitOutfit: NextPage = () => {
   const [source, setSource] = useState('');
   const fileInput = useRef<HTMLInputElement>(null);
 
-  const outfitMutation = trpc.useMutation(['outfit.create'], {
+  const outfitMutation = api.outfit.create.useMutation({
     onSuccess: (data) => {
       router.push(`/outfits/${data.id}`);
     },
@@ -116,7 +116,7 @@ const SubmitOutfit: NextPage = () => {
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const authSession = await getAuthSession(ctx);
+  const authSession = await getServerAuthSession(ctx);
 
   if (!authSession) {
     return {
