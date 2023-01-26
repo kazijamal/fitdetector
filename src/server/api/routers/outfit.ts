@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from '../trpc';
+import { TRPCError } from '@trpc/server';
 
 export const outfitRouter = createTRPCRouter({
   getRecent: publicProcedure.query(async ({ ctx }) => {
@@ -22,7 +23,7 @@ export const outfitRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       if (!ctx.session?.user?.id) {
-        throw new trpc.TRPCError({ code: 'UNAUTHORIZED' });
+        throw new TRPCError({ code: 'UNAUTHORIZED' });
       }
 
       const { celebrityName, image, description, source } = input;
@@ -105,7 +106,7 @@ export const outfitRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       if (!ctx.session?.user?.id) {
-        throw new trpc.TRPCError({ code: 'UNAUTHORIZED' });
+        throw new TRPCError({ code: 'UNAUTHORIZED' });
       }
 
       const { outfitId, value } = input;
@@ -165,7 +166,7 @@ export const outfitRouter = createTRPCRouter({
     }),
   mySubmissions: publicProcedure.query(async ({ ctx }) => {
     if (!ctx.session?.user?.id) {
-      throw new trpc.TRPCError({ code: 'UNAUTHORIZED' });
+      throw new TRPCError({ code: 'UNAUTHORIZED' });
     }
 
     const userId = ctx.session.user.id;
