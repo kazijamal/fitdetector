@@ -4,8 +4,9 @@ import type { AppRouter } from '../server/router';
 import type { AppType } from 'next/dist/shared/lib/utils';
 import superjson from 'superjson';
 import { SessionProvider } from 'next-auth/react';
-import '../styles/globals.css';
 import type { AppProps } from 'next/app';
+import { Session } from "next-auth";
+import '../styles/globals.css';
 
 const MyApp = ({
     Component,
@@ -14,7 +15,7 @@ const MyApp = ({
     session: Session;
 }>) => {
     return (
-        <SessionProvider session={session}>
+        <SessionProvider session={pageProps.session}>
             <Component {...pageProps} />
         </SessionProvider>
     );
