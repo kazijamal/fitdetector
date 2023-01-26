@@ -28,37 +28,36 @@ const AuthNavbar = () => {
           >
             <li>
               <Link href='/following'>
-                <a>Following</a>
+                Following
               </Link>
             </li>
             <li>
               <Link href='/my-submissions'>
-                <a>Your Submissions</a>
+                Your Submissions
               </Link>
             </li>
             <li>
               <Link href='/api/auth/signout'>
-                <a>Sign Out</a>
+                Sign Out
               </Link>
             </li>
           </ul>
         </div>
-        <Link href='/'>
-          <a className='btn btn-ghost normal-case text-xl'>
-            <span className='text-secondary'>Fit</span>Detector
-          </a>
+        <Link href='/' className='btn btn-ghost normal-case text-xl'>
+
+          <span className='text-secondary'>Fit</span>Detector
         </Link>
       </div>
       <div className='navbar-center hidden lg:flex'>
         <ul className='menu menu-horizontal p-0'>
           <li>
             <Link href='/following'>
-              <a>Following</a>
+              Following
             </Link>
           </li>
           <li>
             <Link href='/my-submissions'>
-              <a>Your Submissions</a>
+              Your Submissions
             </Link>
           </li>
           <li>
@@ -67,8 +66,8 @@ const AuthNavbar = () => {
         </ul>
       </div>
       <div className='navbar-end'>
-        <Link href='/submit-outfit'>
-          <a className='btn'>Submit an Outfit</a>
+        <Link href='/submit-outfit' className='btn'>
+          Submit an Outfit
         </Link>
       </div>
     </nav>

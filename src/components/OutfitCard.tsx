@@ -16,8 +16,8 @@ const OutfitCard = ({ outfit }: OutfitCardProps) => {
         {outfit.description && <p className=''>{outfit.description}</p>}
         <p>Submitted on {outfit.createdAt.toLocaleString()}</p>
         <div className='card-actions justify-end pt-3'>
-          <Link href={`/outfits/${outfit.id}`}>
-            <a className='btn btn-primary'>View Outfit</a>
+          <Link href={`/outfits/${outfit.id}`} className='btn btn-primary'>
+            View Outfit
           </Link>
         </div>
       </div>

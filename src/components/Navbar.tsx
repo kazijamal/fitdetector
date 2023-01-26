@@ -5,10 +5,9 @@ const Navbar = () => {
   return (
     <nav className='navbar bg-base-200 no-animation'>
       <div className='navbar-start'>
-        <Link href='/'>
-          <a className='btn btn-ghost normal-case text-xl'>
-            <span className='text-secondary'>Fit</span>Detector
-          </a>
+        <Link href='/' className='btn btn-ghost normal-case text-xl'>
+
+          <span className='text-secondary'>Fit</span>Detector
         </Link>
       </div>
       <div className='navbar-center hidden lg:flex'>
