@@ -49,17 +49,13 @@ export const celebrityRouter = createTRPCRouter({
         return { celebrity };
       }
     }),
-  follow: publicProcedure
+  follow: protectedProcedure
     .input(
       z.object({
         id: z.string(),
       })
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.session?.user?.id) {
-        throw new TRPCError({ code: 'UNAUTHORIZED' });
-      }
-
       const { id } = input;
       const userId = ctx.session.user.id;
 
@@ -72,17 +68,13 @@ export const celebrityRouter = createTRPCRouter({
 
       return follow;
     }),
-  unfollow: publicProcedure
+  unfollow: protectedProcedure
     .input(
       z.object({
         id: z.string(),
       })
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.session?.user?.id) {
-        throw new TRPCError({ code: 'UNAUTHORIZED' });
-      }
-
       const { id } = input;
       const userId = ctx.session.user.id;
 
@@ -101,11 +93,7 @@ export const celebrityRouter = createTRPCRouter({
 
       return deletedFollow;
     }),
-  following: publicProcedure.query(async ({ ctx }) => {
-    if (!ctx.session?.user?.id) {
-      throw new TRPCError({ code: 'UNAUTHORIZED' });
-    }
-
+  following: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.session.user.id;
     const user = await ctx.prisma.user.findUniqueOrThrow({
       where: { id: userId },

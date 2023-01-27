@@ -12,7 +12,7 @@ export const outfitRouter = createTRPCRouter({
 
     return recentOutfits;
   }),
-  create: publicProcedure
+  create: protectedProcedure
     .input(
       z.object({
         celebrityName: z.string(),
@@ -22,10 +22,6 @@ export const outfitRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.session?.user?.id) {
-        throw new TRPCError({ code: 'UNAUTHORIZED' });
-      }
-
       const { celebrityName, image, description, source } = input;
       const userId = ctx.session.user.id;
 
@@ -97,7 +93,7 @@ export const outfitRouter = createTRPCRouter({
         return { outfit };
       }
     }),
-  createRating: publicProcedure
+  createRating: protectedProcedure
     .input(
       z.object({
         outfitId: z.string(),
@@ -105,10 +101,6 @@ export const outfitRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.session?.user?.id) {
-        throw new TRPCError({ code: 'UNAUTHORIZED' });
-      }
-
       const { outfitId, value } = input;
       const userId = ctx.session.user.id;
 
@@ -164,11 +156,7 @@ export const outfitRouter = createTRPCRouter({
 
       return rating;
     }),
-  mySubmissions: publicProcedure.query(async ({ ctx }) => {
-    if (!ctx.session?.user?.id) {
-      throw new TRPCError({ code: 'UNAUTHORIZED' });
-    }
-
+  mySubmissions: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.session.user.id;
 
     const outfits = await ctx.prisma.outfit.findMany({

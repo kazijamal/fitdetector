@@ -4,7 +4,7 @@ import { createTRPCRouter, publicProcedure, protectedProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 
 export const clothingRouter = createTRPCRouter({
-  create: publicProcedure
+  create: protectedProcedure
     .input(
       z.object({
         outfitId: z.string(),
@@ -15,10 +15,6 @@ export const clothingRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.session?.user?.id) {
-        throw new TRPCError({ code: 'UNAUTHORIZED' });
-      }
-
       const { outfitId, type, brand, price, link } = input;
       const userId = ctx.session.user.id;
 
