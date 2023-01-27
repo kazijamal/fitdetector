@@ -57,7 +57,7 @@ export const celebrityRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       const { id } = input;
-      const userId = ctx.session.user.id;
+      const userId = ctx.session.user.id || '';
 
       const follow = await ctx.prisma.follow.create({
         data: {

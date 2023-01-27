@@ -23,7 +23,7 @@ export const outfitRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       const { celebrityName, image, description, source } = input;
-      const userId = ctx.session.user.id;
+      const userId = ctx.session.user.id || '';
 
       const foundCelebrity = await ctx.prisma.celebrity.findFirst({
         where: { name: celebrityName },
@@ -102,7 +102,7 @@ export const outfitRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       const { outfitId, value } = input;
-      const userId = ctx.session.user.id;
+      const userId = ctx.session.user.id || '';
 
       const rating = await ctx.prisma.outfitRating.create({
         data: {

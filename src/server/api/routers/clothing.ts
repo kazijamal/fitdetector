@@ -16,7 +16,7 @@ export const clothingRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       const { outfitId, type, brand, price, link } = input;
-      const userId = ctx.session.user.id;
+      const userId = ctx.session.user.id || '';
 
       const clothing = await ctx.prisma.clothing.create({
         data: {
