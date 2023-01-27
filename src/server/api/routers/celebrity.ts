@@ -103,7 +103,12 @@ export const celebrityRouter = createTRPCRouter({
       },
     });
 
-    const celebrities = user.follows.map((follow) => follow.celebrity);
+    let celebrities = [];
+    for (const follow of user.follows) {
+      if (follow.celebrity) {
+        celebrities.push(follow.celebrity);
+      }
+    }
 
     const celebrityIds = celebrities.map((celebrity) => celebrity.id);
 

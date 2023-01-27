@@ -166,4 +166,33 @@ export const outfitRouter = createTRPCRouter({
 
     return outfits;
   }),
+  delete: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { id } = input;
+      const userId = ctx.session.user.id || '';
+
+      const deleteOutfit = await ctx.prisma.outfit.delete({
+        where: { id },
+      });
+
+      const celebrity = await ctx.prisma.celebrity.findUniqueOrThrow({
+        where: { id: deleteOutfit.celebrityId },
+        include: {
+          outfits: true,
+        },
+      });
+      
+      if (celebrity.outfits.length === 0) {
+        await ctx.prisma.celebrity.delete({
+          where: { id: deleteOutfit.celebrityId },
+        });
+      }
+
+      return deleteOutfit;
+    }),
 });
